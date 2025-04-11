@@ -1,10 +1,11 @@
-from datetime import datetime
 from typing import Optional, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict
 
+T = TypeVar("T")
 
-class TableBase(BaseModel):
+
+class TableBase(BaseModel, Generic[T]):
     """
     Базовая схема
     """

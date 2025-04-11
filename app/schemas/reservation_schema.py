@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TypeVar, Generic, Optional
+from typing import TypeVar, Generic
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -10,7 +10,6 @@ class ReservationBase(BaseModel, Generic[T]):
     """
     Базовая схема
     """
-
     customer_name: str = Field(None, description="Имя клиента")
     table_id: int = Field(None, description="ID стола")
     reservation_time: datetime = Field(None, description="Дата и время бронирования")

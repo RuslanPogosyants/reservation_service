@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import DeclarativeBase, relationship, Mapped, mapped_column
+from sqlalchemy.orm import relationship, Mapped, mapped_column, DeclarativeBase
 
 
 class Base(DeclarativeBase):
@@ -33,4 +33,4 @@ class Reservation(Base):
     table_id: Mapped[int] = mapped_column(Integer, ForeignKey("tables.id"))
     table: Mapped["Table"] = relationship("Table")
     reservation_time: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    durations_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    duration_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
