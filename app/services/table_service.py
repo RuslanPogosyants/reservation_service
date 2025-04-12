@@ -26,4 +26,3 @@ async def delete_table(session: AsyncSession, table_id: int):
     await session.delete(table)
     await session.commit()
     return True
-
