@@ -1,6 +1,9 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession, AsyncEngine
+from typing import AsyncGenerator
 
-engine: AsyncEngine = create_async_engine('postgresql+asyncpg://postgres:postgre@localhost:5432/reservation_db')
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession, AsyncEngine
+from app.core.config import settings
+
+engine: AsyncEngine = create_async_engine(str(settings.DATABASE_URL))
 
 
 AsyncSessionLocal = async_sessionmaker(
@@ -11,6 +14,6 @@ AsyncSessionLocal = async_sessionmaker(
 )
 
 
-async def get_db() -> AsyncSession:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
         yield session
