@@ -1,16 +1,20 @@
-from typing import List
+from typing import List, AsyncGenerator
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import AsyncSessionLocal
 from app.schemas.reservation_schema import ReservationCreate, ReservationRead
-from app.services.reservation_service import delete_reservation, create_reservation, get_all_reservations
+from app.services.reservation_service import (
+    delete_reservation,
+    create_reservation,
+    get_all_reservations,
+)
 
 router = APIRouter(prefix="/reservations", tags=["Reservations"])
 
 
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
         yield session
 
@@ -21,15 +25,21 @@ async def list_resrvations(session: AsyncSession = Depends(get_session)):
 
 
 @router.post("/", response_model=ReservationRead)
-async def add_reservation(reservation: ReservationCreate, session: AsyncSession = Depends(get_session)):
+async def add_reservation(
+    reservation: ReservationCreate, session: AsyncSession = Depends(get_session)
+):
     created = await create_reservation(session, reservation)
     if not created:
-        raise HTTPException(status_code=400, detail="Стол уже забронирован на это время")
+        raise HTTPException(
+            status_code=400, detail="Стол уже забронирован на это время"
+        )
     return created
 
 
 @router.delete("/{reservation_id}")
-async def remove_reservation(reservation_id: int, session: AsyncSession = Depends(get_session)):
+async def remove_reservation(
+    reservation_id: int, session: AsyncSession = Depends(get_session)
+):
     deleted = await delete_reservation(session, reservation_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Бронь не найдена")

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, AsyncGenerator
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,7 +10,7 @@ from app.services.table_service import get_all_tables, create_table, delete_tabl
 router = APIRouter(prefix="/tables", tags=["Tables"])
 
 
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
         yield session
 

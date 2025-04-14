@@ -33,10 +33,7 @@ def run_migrations_offline():
 
 
 async def run_migrations_online():
-    configuration = {
-        "sqlalchemy.url": get_database_url(),
-        "sqlalchemy.echo": "True"
-    }
+    configuration = {"sqlalchemy.url": get_database_url(), "sqlalchemy.echo": "True"}
 
     connectable = async_engine_from_config(
         configuration,

@@ -19,6 +19,7 @@ class TableCreate(TableBase):
     """
     Схема для создания столика
     """
+
     pass
 
 
@@ -26,6 +27,7 @@ class TableRead(TableBase):
     """
     Схема для возврата из API
     """
+
     id: int
 
     model_config = ConfigDict(from_attributes=True)

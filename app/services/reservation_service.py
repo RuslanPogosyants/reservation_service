@@ -15,14 +15,23 @@ async def get_all_reservations(session: AsyncSession):
 
 async def create_reservation(session: AsyncSession, reservation_in: ReservationCreate):
     time_start = reservation_in.reservation_time
-    time_end = time_start + timedelta(minutes=reservation_in.duration_minutes)
+    duration_minutes = reservation_in.duration_minutes
+
+    if not time_start or duration_minutes is None:
+        return None
+
+    time_end = time_start + timedelta(minutes=duration_minutes)
 
     result = await session.execute(
         select(Reservation).where(
             and_(
                 Reservation.table_id == reservation_in.table_id,
                 Reservation.reservation_time < time_end,
-                (Reservation.reservation_time + timedelta(minutes=Reservation.duration_minutes)) > time_start
+                (
+                    Reservation.reservation_time
+                    + timedelta(minutes=Reservation.duration_minutes)
+                )
+                > time_start,
             )
         )
     )
@@ -39,7 +48,9 @@ async def create_reservation(session: AsyncSession, reservation_in: ReservationC
 
 
 async def delete_reservation(session: AsyncSession, reservation_id: int):
-    result = await session.execute(select(Reservation).where(Reservation.id == reservation_id))
+    result = await session.execute(
+        select(Reservation).where(Reservation.id == reservation_id)
+    )
     reservation = result.scalar_one_or_none()
     if reservation is None:
         return False
